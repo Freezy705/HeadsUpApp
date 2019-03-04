@@ -1,2 +1,2 @@
 # HeadsUpApp
-Android To-Do list app intended to emulate a game quest list.
+HeadsUp is a ToDo list app designed to emulate features of a Heads Up Display (HUD) elements.
