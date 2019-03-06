@@ -13,11 +13,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import com.example.lewis.headsup.data.Task;
+
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Activity context;
+    private ArrayList<Task> tasks;
+    private ListView taskListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,9 @@ public class HomeActivity extends AppCompatActivity
 
         context = this;
 
+        final TaskListAdapter listAdapter = new TaskListAdapter(this, tasks);
+        taskListView = findViewById(R.id.task_list);
+        taskListView.setAdapter(listAdapter);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -95,8 +105,6 @@ public class HomeActivity extends AppCompatActivity
 
                 break;
             case R.id.nav_completed :
-
-
 
                 break;
             case R.id.nav_timeline :

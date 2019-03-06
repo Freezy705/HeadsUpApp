@@ -33,6 +33,10 @@ public class Task {
         steps = new ArrayList<TaskStep>();
     }
 
+    public TaskStep getCurrent(){
+        return steps.get(pointer);
+    }
+
     public String nextStep(){
         pointer ++;
         return steps.get(pointer).getBody();
