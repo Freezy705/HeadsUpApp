@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.example.lewis.headsup.data.Task;
 import com.example.lewis.headsup.data.User;
+import com.example.lewis.headsup.data.UserHandler;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        user = User.getUser(this);
+        user = UserHandler.getUser(this);
         tasks = user.getTasks();
 
         final TaskListAdapter listAdapter = new TaskListAdapter(this, tasks);
