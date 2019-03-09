@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.example.lewis.headsup.data.Task;
+import com.example.lewis.headsup.data.User;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class HomeActivity extends AppCompatActivity
 
     private Activity context;
     private ArrayList<Task> tasks;
+    private User user;
     private ListView taskListView;
 
     @Override
@@ -33,21 +35,16 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        context = this;
+        user = User.getUser(this);
+        tasks = user.getTasks();
 
         final TaskListAdapter listAdapter = new TaskListAdapter(this, tasks);
         taskListView = findViewById(R.id.task_list);
         taskListView.setAdapter(listAdapter);
-
+        listAdapter.notifyDataSetChanged();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, CareerActivity.class);
-                context.startActivity(intent);
-            }
-        });
+        fab.setOnClickListener(new ClickListener(this));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -121,5 +118,19 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class ClickListener implements View.OnClickListener {
+        private Activity context;
+
+        public ClickListener (Activity context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(context, CareerActivity.class);
+            startActivity(intent);
+        }
     }
 }

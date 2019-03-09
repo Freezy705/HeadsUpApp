@@ -2,9 +2,7 @@ package com.example.lewis.headsup.data;
 
 import android.app.Activity;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,16 +18,17 @@ import java.util.List;
 public class User implements Serializable{
 
     private int taskNo = 0, tasksCompleted = 0,
-                tasksFinished = 0, tasksInProgress = 0;
-    private List<Task> tasks;
+                tasksInProgress = 0;
+    
+    private ArrayList<Task> tasks;
 
-    private User instance;
+    private static User instance;
 
     public User(){
         tasks = new ArrayList<Task>();
     }
 
-    public User getUser(Activity context){
+    public static User getUser(Activity context){
 
         if(instance == null){
             loadUser(context);
@@ -39,7 +38,8 @@ public class User implements Serializable{
         return instance;
     }
 
-    private User loadUser(Activity context){
+
+    private static User loadUser(Activity context){
             try {
                 FileInputStream fileIn = new FileInputStream(context.getDir("user_inf", Activity.MODE_PRIVATE));
                 ObjectInputStream obj = new ObjectInputStream(fileIn);
@@ -52,17 +52,15 @@ public class User implements Serializable{
     return instance;
     }
 
-    private User createNewUser(Activity context){
+    private static User createNewUser(Activity context){
 
         instance = new User();
-        updateUser(context);
+        saveUser(context);
         return instance;
 
     }
 
-
-
-    public void updateUser(Activity context){
+    public static void saveUser(Activity context){
         FileOutputStream fileout = null;
         try {
             fileout = new FileOutputStream(context.getDir("user_inf", Activity.MODE_PRIVATE));
@@ -74,5 +72,15 @@ public class User implements Serializable{
             e.printStackTrace();
         }
 
+    }
+    
+    public void addStep(Task task){
+        getTasks().add(task);
+        taskNo ++;
+        tasksInProgress ++;
+    }
+
+    public ArrayList<Task> getTasks() {
+        return tasks;
     }
 }
