@@ -23,14 +23,14 @@ public class UserHandler {
             context = in;
 
         if(instance == null){
-            loadUser(context);
+            loadUser();
             if(instance == null)
-                instance = createNewUser(context);
+                instance = createNewUser();
         }
         return instance;
     }
 
-    private static User loadUser(Activity context){
+    private static User loadUser(){
         try {
             FileInputStream fileIn = new FileInputStream(context.getDir("user_inf", Activity.MODE_PRIVATE));
             ObjectInputStream obj = new ObjectInputStream(fileIn);
@@ -43,15 +43,15 @@ public class UserHandler {
         return instance;
     }
 
-    private static User createNewUser(Activity context){
+    private static User createNewUser(){
 
         instance = new User();
-        saveUser(context);
+        saveUser();
         return instance;
 
     }
 
-    public static void saveUser(Activity context){
+    public static void saveUser(){
         FileOutputStream fileout = null;
         try {
             fileout = new FileOutputStream(context.getDir("user_inf", Activity.MODE_PRIVATE));
@@ -65,4 +65,8 @@ public class UserHandler {
 
     }
 
+    public static void addTask(Task task){
+        instance.addStep(task);
+        saveUser();
+    }
 }

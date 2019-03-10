@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.lewis.headsup.data.Task;
@@ -46,6 +47,10 @@ public class HomeActivity extends AppCompatActivity
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new ClickListener(this));
+
+        Button addTask = findViewById(R.id.btn_add);
+        addTask.setOnClickListener(new AddClickListener(this));
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -132,6 +137,30 @@ public class HomeActivity extends AppCompatActivity
         public void onClick(View view) {
             Intent intent = new Intent(context, CareerActivity.class);
             startActivity(intent);
+        }
+    }
+
+    private class AddClickListener implements View.OnClickListener {
+        private Activity context;
+
+        public AddClickListener (Activity context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(context, CareerActivity.class);
+            startActivityForResult(intent,1);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            Intent refresh = new Intent(this, HomeActivity.class);
+            startActivity(refresh);
+            this.finish();
         }
     }
 }
