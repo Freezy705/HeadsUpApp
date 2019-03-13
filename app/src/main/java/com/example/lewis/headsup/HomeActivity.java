@@ -1,9 +1,15 @@
 package com.example.lewis.headsup;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,20 +21,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.lewis.headsup.data.Task;
 import com.example.lewis.headsup.data.User;
 import com.example.lewis.headsup.data.UserHandler;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
+
+import io.reactivex.functions.Consumer;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Activity context;
+    protected Activity context;
     private ArrayList<Task> tasks;
     private User user;
     private ListView taskListView;
+    private static int REQUEST_READ_CONTACTS = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +49,10 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        context = this;
+
         user = UserHandler.getUser(this);
+        save();
         tasks = user.getTasks();
 
         final TaskListAdapter listAdapter = new TaskListAdapter(this, tasks);
@@ -149,7 +164,7 @@ public class HomeActivity extends AppCompatActivity
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(context, CareerActivity.class);
+            Intent intent = new Intent(context, AddTaskActivity.class);
             startActivityForResult(intent,1);
         }
     }
@@ -158,9 +173,29 @@ public class HomeActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
+            save();
             Intent refresh = new Intent(this, HomeActivity.class);
             startActivity(refresh);
             this.finish();
         }
     }
+
+    private void save(){
+
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean granted) throws Exception {
+                        if (granted) {
+                            UserHandler.saveUser();
+                        }else{
+                            Toast.makeText(context,"Saved",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 }

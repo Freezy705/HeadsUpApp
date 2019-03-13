@@ -12,6 +12,11 @@ public class TaskStep{
     private Date timeStarted;
     private Date timeFinished;
 
+    public TaskStep(String taskBody){
+        body = taskBody;
+        timeStarted = new Date();
+    }
+
     public String getBody() {
         return body;
     }

@@ -17,29 +17,27 @@ public class Task {
     private int pointer = 0;
     public boolean finished = false;
 
-    public Task(String title, Date timeStarted){
-        title = this.title;
-        timeStarted = this.timeStarted;
-
-        steps = new ArrayList<TaskStep>();
+    public Task(String titleIn, ArrayList<TaskStep> taskSteps){
+        title = titleIn;
+        timeStarted = new Date();
+        steps =  taskSteps;
     }
 
-    public Task(String title, Date timeStarted, int pointer){
-
-        title = this.title;
-        timeStarted = this.timeStarted;
-        pointer = this.pointer;
-
-        steps = new ArrayList<TaskStep>();
-    }
 
     public TaskStep getCurrent(){
+        if(steps.size() == 0)
+            return null;
+        else
         return steps.get(pointer);
     }
 
-    public String nextStep(){
-        pointer ++;
-        return steps.get(pointer).getBody();
+    public void nextStep(){
+        if(!finished){
+            if(pointer == steps.size() - 1){
+                finish(new Date());
+            }
+            pointer ++;
+        }
     }
 
     @Override
@@ -62,20 +60,21 @@ public class Task {
         return timeStarted;
     }
 
-    public void setTimeStarted(Date timeStarted) {
-        this.timeStarted = timeStarted;
-    }
-
     public Date getTimeFinished() {
         return timeFinished;
     }
 
-    public void setTimeFinished(Date timeFinished) {
+    public void finish(Date timeFinished) {
         this.timeFinished = timeFinished;
+        setFinished();
     }
 
     public List<TaskStep> getSteps() {
         return steps;
+    }
+
+    public boolean isUntouched(){
+        return pointer == 0;
     }
 
     public void setSteps(List<TaskStep> steps) {

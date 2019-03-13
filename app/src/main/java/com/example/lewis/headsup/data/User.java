@@ -22,9 +22,33 @@ public class User implements Serializable{
         return tasks;
     }
 
-    public void addStep(Task task){
+    public void addTask(Task task){
         tasks.add(task);
         taskNo++;
         tasksInProgress++;
+    }
+
+    public void addStep(TaskStep taskStep, int pointer){
+        tasks.get(pointer).addSteps(taskStep);
+    }
+
+    public int[] getStates(){
+        int[] states = new int[]{0,0,0};
+
+        for (Task t : tasks){
+            if(t.finished)
+                states[0]++;
+            else{
+                if (t.isUntouched())
+                    states[1]++;
+                else
+                    states[2]++;
+            }
+        }
+        System.out.println(states[0]);
+        System.out.println(states[1]);
+        System.out.println(states[2]);
+
+        return states;
     }
 }

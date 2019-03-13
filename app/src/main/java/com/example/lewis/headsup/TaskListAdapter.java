@@ -25,6 +25,8 @@ public class TaskListAdapter extends ArrayAdapter {
     //private StorageReference storageRef;
     private final Activity context;
     private ArrayList<Task> data;
+    private Task task;
+    private TextView clubStepText;
 
     public TaskListAdapter(@NonNull Activity context, ArrayList<Task> data) {
         super(context,R.layout.listview_row , data);
@@ -35,20 +37,40 @@ public class TaskListAdapter extends ArrayAdapter {
     public View getView(final int position, final View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.listview_row, null,true);
-        Task task = data.get(position);
+        task = data.get(position);
+
+        validate(position);
 
         TextView clubNameText = rowView.findViewById(R.id.task_title);
         clubNameText.setText(task.getTitle());
 
-        TextView clubStepText = rowView.findViewById(R.id.task_current_step);
-        clubStepText.setText(task.getCurrent().getBody());
+        clubStepText = rowView.findViewById(R.id.task_current_step);
+        setText();
 
         rowView.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
-                Snackbar.make(view,"Placeholder",200);
+                task.nextStep();
+                validate(position);
             }
         });
 
         return rowView;
     };
+
+    private void setText(){
+        if(!task.finished)
+            clubStepText.setText(task.getCurrent().getBody());
+        else
+            clubStepText.setText("");
+    }
+
+    private void validate(int position){
+
+        if(task.finished){
+            data.remove(position);
+            notifyDataSetChanged();
+        }else{
+            setText();
+        }
+    }
 }
